@@ -68,7 +68,11 @@ export const api = {
       body: JSON.stringify({ geofence_ids }),
     }),
 
-  listAlerts: () => request<{ alerts: unknown[] }>('/alerts'),
+  listAlerts: (qs = '') =>
+    request<{ alerts: unknown[] }>(`/alerts${qs ? `?${qs}` : ''}`),
+
+  listAlertEvents: (qs = '') =>
+    request<{ events: unknown[]; total_count: number }>(`/alerts/events?${qs}`),
 
   deleteAlert: (alertId: string) =>
     request<{ alert_id: string; status: string }>(

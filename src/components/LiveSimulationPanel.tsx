@@ -46,8 +46,8 @@ export default function LiveSimulationPanel({
         <p>
           Set start and finish on the map, choose how many vehicles to move, then run. Missing
           vehicles are created as <strong>SIM-*</strong> dummies in one DB transaction. Each gets a
-          random speed (~30–90 km/h). Ensures alert rules (all vehicles, entry+exit) for each
-          geofence and clears stale zone state before moving.
+          random speed (~30–90 km/h). Auto-adds a demo alert rule only on geofences with no rules yet;
+          existing rules on the Alerts page are left unchanged. Clears stale zone state before moving.
         </p>
         <label>
           Vehicles to simulate (1–{maxSim})
