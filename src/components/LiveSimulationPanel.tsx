@@ -34,8 +34,10 @@ export default function LiveSimulationPanel({
   wsUrl,
 }: Props) {
   const [count, setCount] = useState(1);
-  const routeReady = simStart && simEnd && haversineMeters(simStart, simEnd) > 5;
+  const locationsReady = Boolean(simStart && simEnd);
+  const routeReady = locationsReady && haversineMeters(simStart!, simEnd!) > 5;
   const maxSim = 50;
+  const stopMuted = !locationsReady || !running;
 
   return (
     <>
@@ -67,8 +69,7 @@ export default function LiveSimulationPanel({
         <div className="sim-pick-row">
           <button
             type="button"
-            className="primary"
-            style={{ background: pickMode === 'start' ? '#22c55e' : '#334155' }}
+            className={`primary sim-set-point sim-set-point--start${pickMode === 'start' ? ' is-picking' : ''}`}
             disabled={running}
             onClick={() => onPickModeChange(pickMode === 'start' ? null : 'start')}
           >
@@ -76,8 +77,7 @@ export default function LiveSimulationPanel({
           </button>
           <button
             type="button"
-            className="primary"
-            style={{ background: pickMode === 'end' ? '#ef4444' : '#334155' }}
+            className={`primary sim-set-point sim-set-point--finish${pickMode === 'end' ? ' is-picking' : ''}`}
             disabled={running}
             onClick={() => onPickModeChange(pickMode === 'end' ? null : 'end')}
           >
@@ -94,7 +94,7 @@ export default function LiveSimulationPanel({
         <div className="sim-pick-row">
           <button
             type="button"
-            className="primary"
+            className={`primary${!locationsReady ? ' sim-btn-muted' : ''}`}
             disabled={running || !routeReady}
             onClick={() => {
               void (async () => {
@@ -112,9 +112,8 @@ export default function LiveSimulationPanel({
           </button>
           <button
             type="button"
-            className="primary"
-            style={{ background: '#64748b' }}
-            disabled={!running}
+            className={`primary${stopMuted ? ' sim-btn-muted' : ''}`}
+            disabled={!running || !locationsReady}
             onClick={() => {
               onStop();
               toast.success('Simulation stopped');
